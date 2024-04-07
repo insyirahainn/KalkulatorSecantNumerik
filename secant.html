@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Methode Secant</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+    </script>
+  <style type="text/css">
+    * {
+      padding: 0;
+      margin: 0;
+      color: white;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    textarea {
+      border-radius: 0px;
+      margin-left: 20px;
+      margin-top: 30px;
+      color: black;
+      padding-left: 20px;
+      padding-top: 20px;
+      font-weight: bold;
+      padding-bottom: 20px;
+    }
+
+    .btnHitung {
+      background-color: white;
+      color: grey;
+      margin-top: 15px;
+      padding: 4px 16px;
+      border-radius: 4px;
+    }
+
+    .btnHitung:hover {
+      background-color: grey;
+      color: white;
+      padding: 4px 16px;
+      border-radius: 4px;
+    }
+
+    #container {
+      margin-left: 10px;
+      margin-top: 80px;
+    }
+  </style>
+</head>
+
+<body class="bg-dark">
+  <div>
+    <header>
+      <nav class="navbar navbar-expand-sm navbar-dark bg-secondary">
+        <div class="container-fluid">
+          <div class="d-flex">
+            <h3 style="color: silver;margin-right: 10px;font-family: arial black">KALKULATOR</h3>
+          </div>
+        </div>
+      </nav>
+      <nav class="navbar navbar-expand-sm navbar-dark bg-secondary">
+        <div class="container-fluid">
+          <div class="d-flex">
+            <button class="btn btn-outline-dark" type="submit" style="margin-right: 15px;"><a
+                href="index.html">BACK</a></button>
+            <!--             <button class="btn btn-outline-dark" type="submit" style="margin-right: 15px;"><a href="kubus.html">KUBUS</a></button>
+            <button class="btn btn-outline-dark" type="submit" style="margin-right: 15px;"><a href="balok.html">BALOK</a></button>
+            <button class="btn btn-outline-dark" type="submit" style="margin-right: 15px;"><a href="kerucut.html">KERUCUT</a></button>
+            <button class="btn btn-outline-dark" type="submit" style="margin-right: 15px;"><a href="secant.html">SECANT</a></button> -->
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="d-flex">
+      <div class="container">
+        <div class="col-md-8" id="container">
+          <div class="col-auto" style="margin-left: 100px;">
+            <label class="">Nilai X₁</label>
+            <input type="number" class="form-control" id="X1" placeholder="0" required>
+            <label class="">Nilai X₂</label>
+            <input type="number" class="form-control" id="X2" placeholder="0" required>
+            <label class="">Toleransi (E)</label>
+            <input type="number" class="form-control" id="e" step="any" placeholder="0.000">
+            <label class="">Persamaan Fungsi f(x)</label>
+            <input type="text" class="form-control" id="persamaan" placeholder="x^3+x^2-3*x-3" required>
+            <button onclick="secant()" class="btnHitung">Hitung</button>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="col-md-10" id="container">
+          <div class="col-auto"></div>
+          <label class="">
+            <h5><b>Pengertian Metode Secant</b></h5>
+          </label>
+          <p style="text-align: justify;">Metode Secant adalah salah satu metode numerik yang digunakan untuk menghitung
+            akar (solusi) dari suatu persamaan matematika. Metode ini bekerja dengan mencari solusi persamaan
+            berdasarkan pendekatan iteratif. Metode Secant umumnya digunakan ketika rumus analitis dari persamaan tidak
+            dapat diselesaikan secara eksplisit atau ketika solusi eksak sulit untuk ditemukan.<br>Metode Secant
+            menggunakan dua titik awal (X1 dan X2) yang berdekatan pada sumbu x, dan kemudian menghitung nilai fungsi
+            pada kedua titik tersebut (f(X1) dan f(X2)). Selanjutnya memasukkan nilai ke rumus secant. Proses ini
+            diulang sampai akar yang cukup mendekati solusi (dengan toleransi tertentu).</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script>
+    function secant() {
+      const method = "secant";
+      let x1 = parseFloat(document.getElementById("X1").value);
+      let x2 = parseFloat(document.getElementById("X2").value);
+      let E = parseFloat(document.getElementById("e").value);
+
+      if (isNaN(x1) || isNaN(x2) || isNaN(E)) {
+        alert("Kolom input harus diisi dengan angka.");
+        return;
+      }
+
+      if (method === "secant") {
+        let n = 0, xm, x0, c;
+        const iterasi = []; // Array untuk menyimpan nilai-nilai iterasi
+        const hasilContainer = document.getElementById("hasilContainer");
+        hasilContainer.innerHTML = ""; // Bersihkan hasil sebelum menambahkan hasil baru
+        const textarea = document.createElement("textarea");
+        textarea.setAttribute("rows", "20");
+        textarea.setAttribute("cols", "165");
+        textarea.setAttribute("readonly", "true");
+        let resultText =
+          "ALGORITMA :" + "\n" +
+          "1. Definisikan fungsi f(x) dan toleransi error (E)" + "\n" +
+          "2. Masukkan dua nilai x1 dan x2 sebagai iterasi awal" + "\n" +
+          "3. Hitung hasil f(x) dengan memasukkan nilai dari x1 dan x2" + "\n" +
+          "4. Rumus formula : Xn+1 = Xn - ((f(Xn) * (Xn - Xn-1))/(f(Xn) - f(Xn-1)))" + "\n" +
+          "5. Hitung hasil f(Xn+1) dengan memasukkan nilai Xn+1" + "\n" +
+          "6. Iterasi akan berhenti apabila nilai dari f(Xn+1) mendekati nilai toleransi error (E)" + "\n\n" +
+          "HASIL : " + "\n";
+
+        do {
+          x0 = x2 - ((f(x2) * (x2 - x1)) / (f(x2) - f(x1)));
+          c = f(x1) * f(x0);
+
+          // Simpan nilai iterasi
+          iterasi.push({x: x0, n: n});
+
+          x1 = x2;
+          x2 = x0;
+
+          n += 1;
+
+          // resultText += `Iterasi Ke-${n}: x${n} = x2 - ((f(x2) * (x2 - x1)) / (f(x2) - f(x1))) = ${x2.toFixed(6)} - ((${f(x2.toFixed(6))} * (${x2.toFixed(6)} - ${x1.toFixed(6)})) / (${f(x2.toFixed(6))} - ${f(x1.toFixed(6))}))) = ${x0.toFixed(6)}` + "\n";
+
+          resultText += `Iterasi Ke-${n}:` + "\n";
+          resultText += `f(${x1}) = ` + document.getElementById("persamaan").value + ` = ${f(x1)}` + "\n";
+          resultText += `f(${x2}) = ` + document.getElementById("persamaan").value + ` = ${f(x2)}` + "\n";
+          resultText += `x${n} = x2 - ((f(x2) * (x2 - x1)) / (f(x2) - f(x1))) = ${x2} - ((${f(x2)} * (${x2} - ${x1.toFixed(6)})) / (${f(x2)} - ${f(x1)}))) = ${x0}` + "\n";
+          resultText += `f(${x0}) = ` + document.getElementById("persamaan").value + ` = ${f(x0)}` + "\n \n";
+
+
+          xm = x2 - ((f(x2) * (x2 - x1)) / (f(x2) - f(x1)));
+        } while (Math.abs(xm - x0) > E);
+
+        resultText +=
+          "\n" +
+          "Sehingga, Akar persamaan f(Xn+1) = " + x0.toFixed(6) + "\n" +
+          "Iterasi Ke-" + (n) + "\n";
+
+        textarea.textContent = resultText;
+
+        hasilContainer.appendChild(textarea);
+      } else {
+        document.getElementById("result").innerHTML = "Akar tidak ditemukan.";
+      }
+    }
+
+    // Fungsi untuk menghitung nilai fungsi f(x) sesuai input persamaan
+    function f(x) {
+      // Ambil persamaan dari input
+      let persamaan = document.getElementById("persamaan").value;
+
+      // Ganti tanda ^ dengan **
+      persamaan = persamaan.replace(/\^/g, '**');
+
+      // Evaluasi persamaan dengan x yang diinputkan
+      let result = eval(persamaan);
+
+      return result;
+    }
+  </script>
+  <div id="hasilContainer"></div>
+</body>
+
+</html>
